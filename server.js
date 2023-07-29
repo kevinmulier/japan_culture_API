@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 require("dotenv").config();
 
@@ -21,6 +22,8 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
 
     app.use(express.static("public"));
     app.use(cors());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
 
     app.get("/", (req, res) => {
       res.render("index.ejs");
@@ -32,6 +35,15 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         .toArray()
         .then((results) => {
           res.render("festivals.ejs", { festivals: results });
+        })
+        .catch((error) => console.error(error));
+    });
+
+    app.post("/festivals", (req, res) => {
+      festivalsCollection
+        .insertOne(req.body)
+        .then((result) => {
+          res.redirect("/festivals");
         })
         .catch((error) => console.error(error));
     });
