@@ -1,5 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const MongoClient = require("mongodb").MongoClient;
+
+const connectionString = process.env.MONGODB_URI;
 
 const PORT = 8000;
 
