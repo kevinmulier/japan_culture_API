@@ -40,6 +40,8 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
     });
 
     app.post("/festivals", (req, res) => {
+      console.log(JSON.stringify(req.body));
+
       festivalsCollection
         .insertOne(req.body)
         .then((result) => {
@@ -50,10 +52,9 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
 
     app.get("/festivals/:id", (req, res) => {
       festivalsCollection
-        .findOne({ _id: Number(req.params.id) })
+        .findOne({ _id: req.params.id })
         .then((results) => {
           res.render("festival.ejs", { festival: results });
-          console.log(results);
         })
         .catch((error) => console.error(error));
     });
