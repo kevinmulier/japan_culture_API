@@ -48,9 +48,15 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         .catch((error) => console.error(error));
     });
 
-    // POST /festivals
-
-    // GET /festivals/:id
+    app.get("/festivals/:id", (req, res) => {
+      festivalsCollection
+        .findOne({ _id: Number(req.params.id) })
+        .then((results) => {
+          res.render("festival.ejs", { festival: results });
+          console.log(results);
+        })
+        .catch((error) => console.error(error));
+    });
 
     // PUT /festivals/:id
 

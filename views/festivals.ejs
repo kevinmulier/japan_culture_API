@@ -5,5 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Festivals au Japon</title>
   </head>
-  <body> </body>
+  <body>
+    <ul>
+      <% for (let elements of festivals) { %>
+      <li>
+        <h1><%= elements.name %></h1>
+        <h2><%= elements.location %></h2>
+        <h3><%= elements.date %></h3>
+        <p><%= elements.description %></p>
+      </li>
+      <% } %>
+    </ul>
+  </body>
 </html>
