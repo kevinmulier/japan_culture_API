@@ -202,6 +202,96 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         });
     });
 
+    // CUSTOMS
+
+    app.get("/customs", (req, res) => {
+      customsCollection
+        .find()
+        .toArray()
+        .then((results) => {
+          res.render("customs.ejs", { customs: results });
+        })
+        .catch((error) => console.error(error));
+    });
+
+    app.post("/customs", (req, res) => {
+      const { name, description, observation } = req.body;
+
+      if (!name || !description || !observation) {
+        return res.status(400).json({ error: "Missing one or more properties." });
+      }
+
+      customsCollection
+        .insertOne(req.body)
+        .then((result) => {
+          console.log("Custom created successfully.");
+          res.json({ message: "Custom created successfully.", id: result.insertedId });
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while creating the custom." });
+        });
+    });
+
+    app.get("/customs/:id", (req, res) => {
+      customsCollection
+        .findOne({ _id: new ObjectId(req.params.id) })
+        .then((results) => {
+          res.render("custom.ejs", { custom: results });
+        })
+        .catch((error) => console.error(error));
+    });
+
+    app.put("/customs/:id", (req, res) => {
+      const { name, description, observation } = req.body;
+
+      if (!name || !description || !observation) {
+        return res.status(400).json({ error: "Missing one or more properties." });
+      }
+
+      customsCollection
+        .findOneAndUpdate(
+          { _id: new ObjectId(req.params.id) },
+          {
+            $set: {
+              name: name,
+              location: location,
+              date: date,
+              description: description,
+            },
+          },
+          {
+            upsert: true,
+          }
+        )
+        .then((result) => {
+          if (result.lastErrorObject.updatedExisting) {
+            res.json({ message: "Custom updated successfully." });
+          } else {
+            res.json({ message: "Custom created successfully.", id: result.lastErrorObject.upserted });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while updating the custom." });
+        });
+    });
+
+    app.delete("/customs/:id", (req, res) => {
+      customsCollection
+        .deleteOne({ _id: new ObjectId(req.params.id) })
+        .then((results) => {
+          if (results.deletedCount === 0) {
+            return res.json("No custom to delete");
+          }
+          res.json("Custom removed successfully.");
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while removing the custom." });
+        });
+    });
+
     app.listen(process.env.PORT || PORT, () => {
       console.log("Server is running on port " + PORT);
     });
