@@ -7,12 +7,12 @@
   </head>
   <body>
     <ul>
-      <% for (let elements of festivals) { %>
+      <% for (let element of festivals) { %>
       <li>
-        <h1><%= elements.name %></h1>
-        <h2><%= elements.location %></h2>
-        <h3><%= elements.date %></h3>
-        <p><%= elements.description %></p>
+        <h1><%= element.name %></h1>
+        <h2><%= element.location %></h2>
+        <h3><%= element.date %></h3>
+        <p><%= element.description %></p>
       </li>
       <% } %>
     </ul>
