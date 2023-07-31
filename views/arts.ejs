@@ -9,7 +9,9 @@
     <ul>
       <% for (let element of arts) { %>
       <li>
-        <h1><%= element.name %></h1>
+        <a href="/arts/<%= element._id %>">
+          <h1><%= element.name %></h1>
+        </a>
         <h2><%= element.history %></h2>
         <h3><%= element.techniques %></h3>
       </li>
