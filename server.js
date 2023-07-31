@@ -15,10 +15,14 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
     console.log("Connected to Database");
     const db = client.db("japan-festivals");
     const festivalsCollection = db.collection("festivals");
+    const artsCollection = db.collection("arts");
+    const customsCollection = db.collection("customs");
 
     app.use(express.static("public"));
     app.use(cors());
     app.use(express.json());
+
+    // FESTIVALS
 
     app.get("/festivals", (req, res) => {
       festivalsCollection
@@ -51,7 +55,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
 
     app.get("/festivals/:id", (req, res) => {
       festivalsCollection
-        .findOne({ _id: ObjectId(req.params.id) })
+        .findOne({ _id: new ObjectId(req.params.id) })
         .then((results) => {
           res.render("festival.ejs", { festival: results });
         })
@@ -105,6 +109,96 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         .catch((error) => {
           console.error(error);
           res.status(500).json({ error: "An error occurred while removing the festival." });
+        });
+    });
+
+    // ARTS
+
+    app.get("/arts", (req, res) => {
+      artsCollection
+        .find()
+        .toArray()
+        .then((results) => {
+          res.render("arts.ejs", { arts: results });
+        })
+        .catch((error) => console.error(error));
+    });
+
+    app.post("/arts", (req, res) => {
+      const { name, history, techniques } = req.body;
+
+      if (!name || !history || !techniques) {
+        return res.status(400).json({ error: "Missing one or more properties." });
+      }
+
+      artsCollection
+        .insertOne(req.body)
+        .then((result) => {
+          console.log("Art created successfully.");
+          res.json({ message: "Art created successfully.", id: result.insertedId });
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while creating the art." });
+        });
+    });
+
+    app.get("/arts/:id", (req, res) => {
+      artsCollection
+        .findOne({ _id: new ObjectId(req.params.id) })
+        .then((results) => {
+          res.render("art.ejs", { art: results });
+        })
+        .catch((error) => console.error(error));
+    });
+
+    app.put("/arts/:id", (req, res) => {
+      const { name, history, techniques } = req.body;
+
+      if (!name || !history || !techniques) {
+        return res.status(400).json({ error: "Missing one or more properties." });
+      }
+
+      artsCollection
+        .findOneAndUpdate(
+          { _id: new ObjectId(req.params.id) },
+          {
+            $set: {
+              name: name,
+              location: location,
+              date: date,
+              description: description,
+            },
+          },
+          {
+            upsert: true,
+          }
+        )
+        .then((result) => {
+          if (result.lastErrorObject.updatedExisting) {
+            res.json({ message: "Art updated successfully." });
+          } else {
+            res.json({ message: "Art created successfully.", id: result.lastErrorObject.upserted });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while updating the art." });
+        });
+    });
+
+    app.delete("/arts/:id", (req, res) => {
+      artsCollection
+        .deleteOne({ _id: new ObjectId(req.params.id) })
+        .then((results) => {
+          if (results.deletedCount === 0) {
+            return res.json("No art to delete");
+          }
+          res.json("Art removed successfully.");
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while removing the art." });
         });
     });
 
