@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
+const ObjectId = require("mongodb").ObjectId;
 require("dotenv").config();
 
 const connectionString = process.env.MONGODB_URI;
@@ -15,22 +15,13 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
     console.log("Connected to Database");
     const db = client.db("japan-festivals");
     const festivalsCollection = db.collection("festivals");
-    const artsCollection = db.collection("arts");
-    const customsCollection = db.collection("customs");
-
-    app.set("view engine", "ejs");
 
     app.use(express.static("public"));
     app.use(cors());
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json());
-
-    app.get("/", (req, res) => {
-      res.render("index.ejs");
-    });
+    app.use(express.json());
 
     app.get("/festivals", (req, res) => {
-      const cursor = festivalsCollection
+      festivalsCollection
         .find()
         .toArray()
         .then((results) => {
@@ -49,8 +40,8 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
       festivalsCollection
         .insertOne(req.body)
         .then((result) => {
-          res.json({ message: "Festival created successfully." });
-          res.redirect("/festivals");
+          console.log("Festival created successfully.");
+          res.json({ message: "Festival created successfully.", id: result.insertedId });
         })
         .catch((error) => {
           console.error(error);
@@ -60,7 +51,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
 
     app.get("/festivals/:id", (req, res) => {
       festivalsCollection
-        .findOne({ _id: req.params.id })
+        .findOne({ _id: ObjectId(req.params.id) })
         .then((results) => {
           res.render("festival.ejs", { festival: results });
         })
@@ -76,7 +67,7 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
 
       festivalsCollection
         .findOneAndUpdate(
-          { _id: req.params.id },
+          { _id: new ObjectId(req.params.id) },
           {
             $set: {
               name: name,
@@ -102,7 +93,20 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         });
     });
 
-    // DELETE /festivals/:id
+    app.delete("/festivals/:id", (req, res) => {
+      festivalsCollection
+        .deleteOne({ _id: new ObjectId(req.params.id) })
+        .then((results) => {
+          if (results.deletedCount === 0) {
+            return res.json("No festival to delete");
+          }
+          res.json("Festival removed successfully.");
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while removing the festival." });
+        });
+    });
 
     app.listen(process.env.PORT || PORT, () => {
       console.log("Server is running on port " + PORT);
