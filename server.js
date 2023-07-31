@@ -40,14 +40,22 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
     });
 
     app.post("/festivals", (req, res) => {
-      console.log(JSON.stringify(req.body));
+      const { name, location, date, description } = req.body;
+
+      if (!name || !location || !date || !description) {
+        return res.status(400).json({ error: "Missing one or more properties." });
+      }
 
       festivalsCollection
         .insertOne(req.body)
         .then((result) => {
+          res.json({ message: "Festival created successfully." });
           res.redirect("/festivals");
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while creating the festival." });
+        });
     });
 
     app.get("/festivals/:id", (req, res) => {
@@ -59,7 +67,40 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
         .catch((error) => console.error(error));
     });
 
-    // PUT /festivals/:id
+    app.put("/festivals/:id", (req, res) => {
+      const { name, location, date, description } = req.body;
+
+      if (!name || !location || !date || !description) {
+        return res.status(400).json({ error: "Missing one or more properties." });
+      }
+
+      festivalsCollection
+        .findOneAndUpdate(
+          { _id: req.params.id },
+          {
+            $set: {
+              name: name,
+              location: location,
+              date: date,
+              description: description,
+            },
+          },
+          {
+            upsert: true,
+          }
+        )
+        .then((result) => {
+          if (result.lastErrorObject.updatedExisting) {
+            res.json({ message: "Festival updated successfully." });
+          } else {
+            res.json({ message: "Festival created successfully.", id: result.lastErrorObject.upserted });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).json({ error: "An error occurred while updating the festival." });
+        });
+    });
 
     // DELETE /festivals/:id
 
