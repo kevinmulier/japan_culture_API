@@ -22,6 +22,10 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
     app.use(cors());
     app.use(express.json());
 
+    app.get("/", (req, res) => {
+      res.render("index.ejs");
+    });
+
     // FESTIVALS
 
     app.get("/festivals", (req, res) => {
@@ -165,9 +169,8 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
           {
             $set: {
               name: name,
-              location: location,
-              date: date,
-              description: description,
+              history: history,
+              techniques: techniques,
             },
           },
           {
@@ -255,9 +258,8 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
           {
             $set: {
               name: name,
-              location: location,
-              date: date,
               description: description,
+              observation: observation,
             },
           },
           {
