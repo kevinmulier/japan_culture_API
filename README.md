@@ -13,7 +13,7 @@ Welcome to the Japan Culture API project. This server is designed to provide acc
 
 ## About the Project 📖
 
-The Japan Culture API is developed using Node.js, Express, and MongoDB. It includes various endpoints to create, read, update, and delete information about Japanese festivals, arts, and customs.
+The Japan Culture API is developed using Node.js, Express, MongoDB, and EJS. It includes various endpoints to create, read, update, and delete information about Japanese festivals, arts, and customs. EJS is used as a templating language for serving the frontend.
 
 ## Technologies Used 🛠️
 
@@ -22,6 +22,7 @@ Here's a look at the technologies that power this project:
 - **Node.js**: The runtime environment for server-side JavaScript code.
 - **Express**: The web application framework for managing API routes and endpoints.
 - **MongoDB**: The database system for storing and retrieving data.
+- **EJS**: The templating language used for serving the frontend.
 
 ## Features ⚙️
 
