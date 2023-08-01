@@ -4,11 +4,11 @@ Welcome to the Japan Culture API project. This server is designed to provide acc
 
 ## Table of Contents 🗂️
 
-1. [About the Project](#about-the-project-📖)
-2. [Technologies Used](#technologies-used-🛠️)
-3. [Features](#features-⚙️)
-4. [How to Use](#how-to-use-🚀)
-5. [Contributing](#contributing-🤝)
+1. [About the Project](#about-the-project-)
+2. [Technologies Used](#technologies-used-)
+3. [Features](#features-)
+4. [How to Use](#how-to-use-)
+5. [Contributing](#contributing-)
 
 ## About the Project 📖
 
