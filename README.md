@@ -7,12 +7,13 @@ Welcome to the Japan Culture API project. This server is designed to provide acc
 1. [About the Project](#about-the-project-)
 2. [Technologies Used](#technologies-used-%EF%B8%8F)
 3. [Features](#features-%EF%B8%8F)
-4. [How to Use](#how-to-use-)
-5. [Contributing](#contributing-)
+4. [API Endpoints](#api-endpoints-)
+5. [How to Use](#how-to-use-)
+6. [Contributing](#contributing-)
 
 ## About the Project 📖
 
-The Japan Culture API is developed using Node.js, Express, MongoDB, and EJS. It includes various endpoints to create, read, update, and delete information about Japanese festivals, arts, and customs. EJS is used as a templating language for serving the frontend.
+The Japan Culture API is developed using Node.js, Express, and MongoDB. It includes various endpoints to create, read, update, and delete information about Japanese festivals, arts, and customs.
 
 ## Technologies Used 🛠️
 
@@ -21,7 +22,6 @@ Here's a look at the technologies that power this project:
 - **Node.js**: The runtime environment for server-side JavaScript code.
 - **Express**: The web application framework for managing API routes and endpoints.
 - **MongoDB**: The database system for storing and retrieving data.
-- **EJS**: The templating language used for serving the frontend.
 
 ## Features ⚙️
 
@@ -29,11 +29,38 @@ Here's a look at the technologies that power this project:
 - **Arts**: Handle data related to Japanese arts.
 - **Customs**: Control entries regarding Japanese customs.
 
+## API Endpoints 🌐
+
+### Festivals
+
+- GET /festivals
+- POST /festivals
+- GET /festivals/:id
+- PUT /festivals/:id
+- DELETE /festivals/:id
+
+### Arts
+
+- GET /arts
+- POST /arts
+- GET /arts/:id
+- PUT /arts/:id
+- DELETE /arts/:id
+
+### Customs
+
+- GET /customs
+- POST /customs
+- GET /customs/:id
+- PUT /customs/:id
+- DELETE /customs/:id
+
 ## How to Use 🚀
 
 1. Clone this repository to your local machine.
 2. Install dependencies with "npm install."
-3. Create a `.env` file and set your MongoDB connection string.
+3. Create a `.env` file and set the following variable:
+   - `MONGODB_URI`: Your MongoDB connection string.
 4. Run the server using "node server.js."
 5. Use an API client to make requests to the API endpoints.
 
